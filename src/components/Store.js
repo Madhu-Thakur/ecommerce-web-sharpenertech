@@ -1,34 +1,33 @@
-import React from "react";
+import React ,{useContext} from "react";
 import { Container, Row, Col, Card, Button } from "react-bootstrap";
+import { CartContext } from "../context/CartContext";
 
 const productsArr = [
   {
     title: "Colors",
     price: 100,
-    imageUrl:
-      "https://prasadyash2411.github.io/ecom-website/img/Album%201.png",
+    imageUrl: "https://prasadyash2411.github.io/ecom-website/img/Album%201.png",
   },
   {
     title: "Black and white Colors",
     price: 50,
-    imageUrl:
-      "https://prasadyash2411.github.io/ecom-website/img/Album%202.png",
+    imageUrl: "https://prasadyash2411.github.io/ecom-website/img/Album%202.png",
   },
   {
     title: "Yellow and Black Colors",
     price: 70,
-    imageUrl:
-      "https://prasadyash2411.github.io/ecom-website/img/Album%203.png",
+    imageUrl: "https://prasadyash2411.github.io/ecom-website/img/Album%203.png",
   },
   {
     title: "Blue Color",
     price: 100,
-    imageUrl:
-      "https://prasadyash2411.github.io/ecom-website/img/Album%204.png",
+    imageUrl: "https://prasadyash2411.github.io/ecom-website/img/Album%204.png",
   },
 ];
 
 function Store() {
+  const { addToCart } = useContext(CartContext);
+
   return (
     <Container className="mt-5">
       <h2 className="text-center mb-4">MUSIC</h2>
@@ -41,7 +40,9 @@ function Store() {
               <Card.Body className="text-center">
                 <Card.Title>{product.title}</Card.Title>
                 <Card.Text>${product.price}</Card.Text>
-                <Button variant="info">Add To Cart</Button>
+                <Button variant="info" onClick={() => addToCart(product)}>
+                  Add To Cart
+                </Button>
               </Card.Body>
             </Card>
           </Col>
