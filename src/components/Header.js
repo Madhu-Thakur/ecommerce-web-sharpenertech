@@ -19,7 +19,7 @@ function Header() {
               HOME
             </NavLink>
 
-            <NavLink to="/" className="nav-link">
+            <NavLink to="/store" className="nav-link">
               STORE
             </NavLink>
 
