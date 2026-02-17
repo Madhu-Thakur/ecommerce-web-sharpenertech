@@ -1,6 +1,7 @@
 import React, { useState, useContext } from "react";
 import { CartContext } from "../context/CartContext";
 import { Navbar, Nav, Container, Button } from "react-bootstrap";
+import { NavLink } from "react-router-dom";
 import Cart from "./Cart";
 
 function Header() {
@@ -14,24 +15,26 @@ function Header() {
           <Navbar.Brand>The Generics</Navbar.Brand>
 
           <Nav className="me-auto">
-            <Nav.Link>HOME</Nav.Link>
-            <Nav.Link>STORE</Nav.Link>
-            <Nav.Link>ABOUT</Nav.Link>
+            <NavLink to="/" className="nav-link">
+              HOME
+            </NavLink>
+
+            <NavLink to="/" className="nav-link">
+              STORE
+            </NavLink>
+
+            <NavLink to="/about" className="nav-link">
+              ABOUT
+            </NavLink>
           </Nav>
 
-          <Button
-            variant="outline-info"
-            onClick={() => setShowCart(true)}
-          >
+          <Button variant="outline-info" onClick={() => setShowCart(true)}>
             Cart ({cartCount})
           </Button>
         </Container>
       </Navbar>
 
-      <Cart
-        show={showCart}
-        handleClose={() => setShowCart(false)}
-      />
+      <Cart show={showCart} handleClose={() => setShowCart(false)} />
     </>
   );
 }
