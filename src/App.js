@@ -5,6 +5,7 @@ import Home from "./components/Home";
 import Store from "./components/Store";
 import Footer from "./components/Footer";
 import About from "./components/About";
+import Movies from "./components/Movies";
 import CartProvider from "./context/CartContext";
 
 function App() {
@@ -16,7 +17,9 @@ function App() {
         <Route path="/" element={<Home/>}/>
         <Route path="/store" element={<Store />}/>
         <Route path="/about" element={<About />}/> 
+       
       </Routes>
+       <Movies />
       <Footer/>
     </CartProvider>
     </BrowserRouter>
