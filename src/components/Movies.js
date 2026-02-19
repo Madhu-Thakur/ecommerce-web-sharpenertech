@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback} from "react";
 
 function Movies() {
   const [movies, setMovies] = useState([]);
@@ -23,7 +23,7 @@ function Movies() {
   //       });
   //   }
 
-  async function fetchMoviesHandler() {
+ const fetchMoviesHandler = useCallback(async () => {
     setIsLoading(true);
     setError(null);
 
@@ -31,7 +31,7 @@ function Movies() {
       const response = await fetch("https://swapi.dev/api/films/");
 
       if (!response.ok) {
-        throw new Error("Something went wrong ... Retrying");
+        throw new Error("Something went wrong...Retrying");
       }
 
       const data = await response.json();
@@ -44,41 +44,32 @@ function Movies() {
       });
 
       setMovies(transformedMovies);
-      setRetry(false);
     } catch (error) {
-      setError("Something went wrong ... Retrying");
-      setRetry(true);
+      setError(error.message);
     }
 
     setIsLoading(false);
-  }
+  }, []);
 
-
-  useEffect(() => {
-    if (retry) {
-      const timer = setTimeout(() => {
-        fetchMoviesHandler();
-      }, 5000);
-
-      return () => clearTimeout(timer);
-    }
-  }, [retry]);
+   useEffect(() => {
+    fetchMoviesHandler();
+  }, [fetchMoviesHandler]);
 
   return (
     <div>
-      <button onClick={fetchMoviesHandler}>
+      {/* <button onClick={fetchMoviesHandler}>
         Fetch Movies
-      </button>
+      </button> */}
 
       {isLoading && <p>Loading...</p>}
 
       {error && <p>{error}</p>}
 
-      {retry && (
+      {/* {retry && (
         <button onClick={() => setRetry(false)}>
           Cancel Retry
         </button>
-      )}
+      )} */}
 
       {!isLoading && !error && (
         <ul>
