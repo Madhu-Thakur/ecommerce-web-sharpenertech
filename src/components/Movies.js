@@ -1,47 +1,31 @@
-import React, { useState, useEffect, useCallback} from "react";
+import React, { useState, useEffect, useCallback } from "react";
 
 function Movies() {
   const [movies, setMovies] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [retry, setRetry] = useState(false);
 
-   //   function fetchMoviesHandler() {
-  //     fetch("https://swapi.dev/api/films/")
-  //       .then((response) => {
-  //         return response.json();
-  //       })
-  //       .then((data) => {
-  //         const transformedMovies = data.results.map((movieData) => {
-  //           return {
-  //             id: movieData.episode_id,
-  //             title: movieData.title,
-  //           };
-  //         });
+  const [title, setTitle] = useState("");
+  const [openingText, setOpeningText] = useState("");
+  const [releaseDate, setReleaseDate] = useState("");
 
-  //         setMovies(transformedMovies);
-  //       });
-  //   }
-
- const fetchMoviesHandler = useCallback(async () => {
+  // Fetch Movies (memoized)
+  const fetchMoviesHandler = useCallback(async () => {
     setIsLoading(true);
     setError(null);
 
     try {
       const response = await fetch("https://swapi.dev/api/films/");
-
       if (!response.ok) {
-        throw new Error("Something went wrong...Retrying");
+        throw new Error("Something went wrong!");
       }
 
       const data = await response.json();
 
-      const transformedMovies = data.results.map((movieData) => {
-        return {
-          id: movieData.episode_id,
-          title: movieData.title,
-        };
-      });
+      const transformedMovies = data.results.map((movieData) => ({
+        id: movieData.episode_id,
+        title: movieData.title,
+      }));
 
       setMovies(transformedMovies);
     } catch (error) {
@@ -51,25 +35,71 @@ function Movies() {
     setIsLoading(false);
   }, []);
 
-   useEffect(() => {
+  useEffect(() => {
     fetchMoviesHandler();
   }, [fetchMoviesHandler]);
 
+  // Add Movie Handler (Optimised)
+  const addMovieHandler = useCallback(
+    (event) => {
+      event.preventDefault();
+
+      const newMovieObj = {
+        title: title,
+        openingText: openingText,
+        releaseDate: releaseDate,
+      };
+
+      console.log(newMovieObj);
+
+      // Reset fields
+      setTitle("");
+      setOpeningText("");
+      setReleaseDate("");
+    },
+    [title, openingText, releaseDate]
+  );
+
   return (
-    <div>
-      {/* <button onClick={fetchMoviesHandler}>
-        Fetch Movies
-      </button> */}
+    <div style={{ textAlign: "center" }}>
+      
+      {/* Add Movie Form */}
+      <form onSubmit={addMovieHandler} style={{ marginBottom: "20px" }}>
+        <div>
+          <label>Title</label><br />
+          <input
+            type="text"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+          />
+        </div>
 
-      {isLoading && <p>Loading...</p>}
+        <div>
+          <label>Opening Text</label><br />
+          <textarea
+            rows="3"
+            value={openingText}
+            onChange={(e) => setOpeningText(e.target.value)}
+          />
+        </div>
 
-      {error && <p>{error}</p>}
+        <div>
+          <label>Release Date</label><br />
+          <input
+            type="date"
+            value={releaseDate}
+            onChange={(e) => setReleaseDate(e.target.value)}
+          />
+        </div>
 
-      {/* {retry && (
-        <button onClick={() => setRetry(false)}>
-          Cancel Retry
+        <button type="submit" style={{ marginTop: "10px" }}>
+          Add Movie
         </button>
-      )} */}
+      </form>
+
+      {/* Movies Section */}
+      {isLoading && <p>Loading...</p>}
+      {error && <p>{error}</p>}
 
       {!isLoading && !error && (
         <ul>
