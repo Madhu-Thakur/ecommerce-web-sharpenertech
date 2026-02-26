@@ -7,6 +7,8 @@ import Footer from "./components/Footer";
 import About from "./components/About";
 import ContactUs from "./components/ContactUs";
 import CartProvider from "./context/CartContext";
+import Products from "./components/Products";
+import ProductDetail from "./components/ProductDetail";
 
 function App() {
   return (
@@ -19,9 +21,12 @@ function App() {
             <Home />
           </Route>
 
-          <Route path="/store">
+         <Route path="/store" exact component={Store} />
+    <Route path="/store/:productId" component={ProductDetail} />
+
+          {/* <Route path="/store">
             <Store />
-          </Route>
+          </Route> */}
 
           <Route path="/about">
             <About />
