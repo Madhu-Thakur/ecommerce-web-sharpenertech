@@ -26,6 +26,11 @@ function Header() {
             <NavLink to="/about" className="nav-link">
               ABOUT
             </NavLink>
+
+            {/* ✅ NEW CONTACT LINK */}
+            <NavLink to="/contact" className="nav-link">
+              CONTACT US
+            </NavLink>
           </Nav>
 
           <Button variant="outline-info" onClick={() => setShowCart(true)}>
