@@ -1,33 +1,40 @@
 import React, { useState, useEffect, useCallback } from "react";
+import AddMovie from "./AddMovie";
+import MoviesList from "./MoviesList";
+
+const FIREBASE_URL = "https://movieshub-12eab-default-rtdb.firebaseio.com/movies";
 
 function Movies() {
   const [movies, setMovies] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const [title, setTitle] = useState("");
-  const [openingText, setOpeningText] = useState("");
-  const [releaseDate, setReleaseDate] = useState("");
-
-  // Fetch Movies (memoized)
+  
   const fetchMoviesHandler = useCallback(async () => {
     setIsLoading(true);
     setError(null);
 
     try {
-      const response = await fetch("https://swapi.dev/api/films/");
+      const response = await fetch(`${FIREBASE_URL}.json`);
+
       if (!response.ok) {
         throw new Error("Something went wrong!");
       }
 
       const data = await response.json();
 
-      const transformedMovies = data.results.map((movieData) => ({
-        id: movieData.episode_id,
-        title: movieData.title,
-      }));
+      const loadedMovies = [];
 
-      setMovies(transformedMovies);
+      for (const key in data) {
+        loadedMovies.push({
+          id: key,
+          title: data[key].title,
+          openingText: data[key].openingText,
+          releaseDate: data[key].releaseDate,
+        });
+      }
+
+      setMovies(loadedMovies);
     } catch (error) {
       setError(error.message);
     }
@@ -39,74 +46,58 @@ function Movies() {
     fetchMoviesHandler();
   }, [fetchMoviesHandler]);
 
-  // Add Movie Handler (Optimised)
-  const addMovieHandler = useCallback(
-    (event) => {
-      event.preventDefault();
+  async function addMovieHandler(movie) {
+    try {
+      const response = await fetch(`${FIREBASE_URL}.json`, {
+        method: "POST",
+        body: JSON.stringify(movie),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
 
-      const newMovieObj = {
-        title: title,
-        openingText: openingText,
-        releaseDate: releaseDate,
-      };
+      if (!response.ok) {
+        throw new Error("Failed to add movie");
+      }
 
-      console.log(newMovieObj);
+      fetchMoviesHandler(); 
+    } catch (error) {
+      setError(error.message);
+    }
+  }
 
-      // Reset fields
-      setTitle("");
-      setOpeningText("");
-      setReleaseDate("");
-    },
-    [title, openingText, releaseDate]
-  );
+  async function deleteMovieHandler(id) {
+    try {
+      const response = await fetch(
+        `${FIREBASE_URL}/${id}.json`,
+        {
+          method: "DELETE",
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to delete movie");
+      }
+
+      setMovies((prevMovies) =>
+        prevMovies.filter((movie) => movie.id !== id)
+      );
+    } catch (error) {
+      setError(error.message);
+    }
+  }
 
   return (
     <div style={{ textAlign: "center" }}>
-      
-      {/* Add Movie Form */}
-      <form onSubmit={addMovieHandler} style={{ marginBottom: "20px" }}>
-        <div>
-          <label>Title</label><br />
-          <input
-            type="text"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-          />
-        </div>
+      <AddMovie onAddMovie={addMovieHandler} />
 
-        <div>
-          <label>Opening Text</label><br />
-          <textarea
-            rows="3"
-            value={openingText}
-            onChange={(e) => setOpeningText(e.target.value)}
-          />
-        </div>
+      <button onClick={fetchMoviesHandler}>Fetch Movies</button>
 
-        <div>
-          <label>Release Date</label><br />
-          <input
-            type="date"
-            value={releaseDate}
-            onChange={(e) => setReleaseDate(e.target.value)}
-          />
-        </div>
-
-        <button type="submit" style={{ marginTop: "10px" }}>
-          Add Movie
-        </button>
-      </form>
-
-      {/* Movies Section */}
       {isLoading && <p>Loading...</p>}
       {error && <p>{error}</p>}
 
       {!isLoading && !error && (
-        <ul>
-          {movies.map((movie) => (
-            <li key={movie.id}>{movie.title}</li>
-          ))}
-        </ul>
+        <MoviesList movies={movies} onDelete={deleteMovieHandler} />
       )}
     </div>
   );
