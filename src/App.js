@@ -9,6 +9,7 @@ import ContactUs from "./components/ContactUs";
 import CartProvider from "./context/CartContext";
 import Products from "./components/Products";
 import ProductDetail from "./components/ProductDetail";
+import Login from "./components/Login";
 
 function App() {
   return (
@@ -21,15 +22,15 @@ function App() {
             <Home />
           </Route>
 
-         <Route path="/store" exact component={Store} />
-    <Route path="/store/:productId" component={ProductDetail} />
-
-          {/* <Route path="/store">
-            <Store />
-          </Route> */}
+          <Route path="/store" exact component={Store} />
+          <Route path="/store/:productId" component={ProductDetail} />
 
           <Route path="/about">
             <About />
+          </Route>
+
+          <Route path="/login">
+            <Login />
           </Route>
 
           <Route path="/contact">

@@ -3,6 +3,7 @@ import { CartContext } from "../context/CartContext";
 import { Navbar, Nav, Container, Button } from "react-bootstrap";
 import { NavLink } from "react-router-dom";
 import Cart from "./Cart";
+import { Link } from 'react-router-dom';
 
 function Header() {
   const [showCart, setShowCart] = useState(false);
@@ -27,7 +28,10 @@ function Header() {
               ABOUT
             </NavLink>
 
-            {/* ✅ NEW CONTACT LINK */}
+            <NavLink to="/login" className="nav-link">
+              LOGIN
+            </NavLink>
+
             <NavLink to="/contact" className="nav-link">
               CONTACT US
             </NavLink>
