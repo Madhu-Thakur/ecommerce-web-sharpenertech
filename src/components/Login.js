@@ -4,7 +4,6 @@ import { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
 
 const Login = () => {
-
   const emailRef = useRef();
   const passwordRef = useRef();
   const { login } = useContext(AuthContext);
@@ -14,14 +13,12 @@ const Login = () => {
   const history = useHistory();
 
   const submitHandler = async (event) => {
-
     event.preventDefault();
 
     const enteredEmail = emailRef.current.value;
     const enteredPassword = passwordRef.current.value;
 
     try {
-
       const response = await fetch(
         `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${process.env.REACT_APP_FIREBASE_API_KEY}`,
         {
@@ -34,7 +31,7 @@ const Login = () => {
             password: enteredPassword,
             returnSecureToken: true,
           }),
-        }
+        },
       );
 
       const data = await response.json();
@@ -45,22 +42,19 @@ const Login = () => {
       localStorage.setItem("token", data.idToken);
 
       alert("Login Successful");
+      localStorage.setItem("email", enteredEmail.replace(/[@.]/g, ""));
       login(data.idToken);
-      history.push('/store');
-
+      history.push("/store");
     } catch (err) {
-
       setError(err.message);
     }
   };
 
   return (
     <section>
-
       <h1>Login</h1>
 
       <form onSubmit={submitHandler}>
-
         <div>
           <label>Email</label>
           <input type="email" ref={emailRef} required />
@@ -74,9 +68,7 @@ const Login = () => {
         <button>Login</button>
 
         {error && <p>{error}</p>}
-
       </form>
-
     </section>
   );
 };

@@ -27,7 +27,8 @@ function Cart({ show, handleClose }) {
                 <Button
                   variant="danger"
                   size="sm"
-                  onClick={() => removeItem(item.title)}
+                  // onClick={() => removeItem(item.title)}
+                  onClick={() => removeItem(item._id)}
                 >
                   REMOVE
                 </Button>
