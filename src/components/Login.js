@@ -1,10 +1,13 @@
 import { useRef, useState } from "react";
 import { useHistory } from "react-router-dom";
+import { useContext } from "react";
+import { AuthContext } from "../context/AuthContext";
 
 const Login = () => {
 
   const emailRef = useRef();
   const passwordRef = useRef();
+  const { login } = useContext(AuthContext);
 
   const [error, setError] = useState("");
 
@@ -42,7 +45,7 @@ const Login = () => {
       localStorage.setItem("token", data.idToken);
 
       alert("Login Successful");
-      
+      login(data.idToken);
       history.push('/store');
 
     } catch (err) {

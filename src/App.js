@@ -10,8 +10,13 @@ import CartProvider from "./context/CartContext";
 import Products from "./components/Products";
 import ProductDetail from "./components/ProductDetail";
 import Login from "./components/Login";
+import { useContext } from "react";
+import { Redirect } from "react-router-dom";
+import { AuthContext } from "./context/AuthContext";
 
 function App() {
+  const { isLoggedIn } = useContext(AuthContext);
+  const token = localStorage.getItem("token");
   return (
     <BrowserRouter>
       <CartProvider>
@@ -22,8 +27,21 @@ function App() {
             <Home />
           </Route>
 
-          <Route path="/store" exact component={Store} />
-          <Route path="/store/:productId" component={ProductDetail} />
+          {/* <Route path="/store" exact>
+            {isLoggedIn ? <Store /> : <Redirect to="/login" />}
+          </Route>
+
+          <Route path="/store/:productId">
+            {isLoggedIn ? <ProductDetail /> : <Redirect to="/login" />}
+          </Route> */}
+
+          <Route path="/store" exact>
+            {token ? <Store /> : <Redirect to="/login" />}
+          </Route>
+
+          <Route path="/store/:productId">
+            {token ? <ProductDetail /> : <Redirect to="/login" />}
+          </Route>
 
           <Route path="/about">
             <About />
